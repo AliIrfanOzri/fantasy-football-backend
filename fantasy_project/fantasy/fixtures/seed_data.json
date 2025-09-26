@@ -1,0 +1,58 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "admin",
+      "email": "admin@example.com",
+      "password": "pbkdf2_sha256$600000$example$hash",
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "user1",
+      "email": "user1@example.com",
+      "password": "pbkdf2_sha256$600000$example$hash",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "user2",
+      "email": "user2@example.com",
+      "password": "pbkdf2_sha256$600000$example$hash",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true
+    }
+  },
+
+  { "model": "fantasy.team", "pk": 1, "fields": { "user": 2, "capital": 5000000 } },
+  { "model": "fantasy.team", "pk": 2, "fields": { "user": 3, "capital": 5000000 } },
+
+  { "model": "fantasy.player", "pk": 1, "fields": { "name": "Player1_GK", "position": "goalkeeper", "value": 1000000, "team": 1 } },
+  { "model": "fantasy.player", "pk": 2, "fields": { "name": "Player2_GK", "position": "goalkeeper", "value": 1000000, "team": 1 } },
+  { "model": "fantasy.player", "pk": 3, "fields": { "name": "Player3_DEF", "position": "defender", "value": 1000000, "team": 1 } },
+  { "model": "fantasy.player", "pk": 4, "fields": { "name": "Player4_DEF", "position": "defender", "value": 1000000, "team": 1 } },
+  { "model": "fantasy.player", "pk": 5, "fields": { "name": "Player5_MID", "position": "midfielder", "value": 1000000, "team": 1 } },
+  { "model": "fantasy.player", "pk": 6, "fields": { "name": "Player6_ATT", "position": "attacker", "value": 1000000, "team": 1 } },
+  { "model": "fantasy.player", "pk": 7, "fields": { "name": "Player7_GK", "position": "goalkeeper", "value": 1000000, "team": 2 } },
+  { "model": "fantasy.player", "pk": 8, "fields": { "name": "Player8_DEF", "position": "defender", "value": 1000000, "team": 2 } },
+  { "model": "fantasy.player", "pk": 9, "fields": { "name": "Player9_MID", "position": "midfielder", "value": 1000000, "team": 2 } },
+  { "model": "fantasy.player", "pk": 10, "fields": { "name": "Player10_ATT", "position": "attacker", "value": 1000000, "team": 2 } },
+
+  { "model": "fantasy.transfer", "pk": 1, "fields": { "player": 6, "price": 2000000, "seller": 1, "is_active": true } },
+  { "model": "fantasy.transfer", "pk": 2, "fields": { "player": 10, "price": 1500000, "seller": 2, "is_active": true } },
+
+  { "model": "fantasy.transaction", "pk": 1, "fields": { "buyer": 1, "seller": 2, "player": 10, "amount": 1500000, "created_at": "2025-09-01T10:00:00Z" } },
+  { "model": "fantasy.transaction", "pk": 2, "fields": { "buyer": 2, "seller": 1, "player": 6, "amount": 2000000, "created_at": "2025-09-02T10:00:00Z" } }
+]
