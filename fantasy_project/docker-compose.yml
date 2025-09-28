@@ -53,5 +53,22 @@ services:
       DB_HOST: db
       DB_PORT: 5432
 
+
+  test:
+    build: .
+    container_name: fantasy_test
+    command: pytest --disable-warnings -q
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+    environment:
+      DB_NAME: fantasy
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DJANGO_SETTINGS_MODULE: project_name.settings  # replace with your real settings
+
 volumes:
   postgres_data:

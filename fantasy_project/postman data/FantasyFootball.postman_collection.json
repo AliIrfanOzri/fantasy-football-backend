@@ -74,7 +74,7 @@
               { "key": "Authorization", "value": "Bearer {{access_token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/api/teams/my/", "host": ["{{base_url}}"], "path": ["api", "teams", "my"] },
+            "url": { "raw": "{{base_url}}/api/teams/me/", "host": ["{{base_url}}"], "path": ["api", "teams", "my"] },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"team_name\": \"Dream XI\"\n}"
@@ -92,7 +92,7 @@
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
             "url": {
-              "raw": "{{base_url}}/api/players/?position=midfielder&limit=10&offset=0",
+              "raw": "{{base_url}}/api/players//?position=midfielder&limit=10&offset=0",
               "host": ["{{base_url}}"],
               "path": ["api", "players"],
               "query": [
@@ -108,7 +108,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-            "url": { "raw": "{{base_url}}/api/players/1/", "host": ["{{base_url}}"], "path": ["api", "players", "1"] }
+            "url": { "raw": "{{base_url}}/api/players/1//", "host": ["{{base_url}}"], "path": ["api", "players", "1"] }
           }
         }
       ]
@@ -132,10 +132,10 @@
               { "key": "Authorization", "value": "Bearer {{access_token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/api/transfers/", "host": ["{{base_url}}"], "path": ["api", "transfers"] },
+            "url": { "raw": "{{base_url}}/api/transfers//", "host": ["{{base_url}}"], "path": ["api", "transfers"] },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"player\": 1,\n  \"price\": 1500000\n}"
+              "raw": "{\n  \"player_id\": 1,\n  \"price\": 1500000\n}"
             }
           }
         },
@@ -147,10 +147,10 @@
               { "key": "Authorization", "value": "Bearer {{access_token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/api/transfers/1/buy/", "host": ["{{base_url}}"], "path": ["api", "transfers", "1", "buy"] },
+            "url": { "raw": "{{base_url}}/api/transfers/1/buy//", "host": ["{{base_url}}"], "path": ["api", "transfers", "1", "buy"] },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"player\": 1\n}"
+              "raw": "{\n  \"player_id\": 1\n}"
             }
           }
         }

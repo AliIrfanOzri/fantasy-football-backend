@@ -1,16 +1,19 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics ,filters as drf_filters
 from rest_framework.decorators import action
+from django_filters import rest_framework as df_filters
 from rest_framework.response import Response
 from django.db import transaction
 from decimal import Decimal
 import random
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.models import User
 from .models import Team, Player, TransferListing, Transaction
-from .serializers import (UserRegisterSerializer, TeamSerializer,
+from .serializers import (UserRegisterSerializer, UserProfileSerializer,TeamSerializer,
                           PlayerSerializer, TransferListingSerializer,
-                          TransactionSerializer)
+                          TransactionSerializer,TeamCreateSerializer)
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -25,14 +28,51 @@ class UserViewSet(viewsets.ModelViewSet):
         return serializer.save()  # signals create team/players
 
 
-class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+class RegisterAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = UserRegisterSerializer
+
+    def perform_create(self, serializer):
+        return serializer.save()  # signals create team/players
+
+
+class ProfileAPIView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+# class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = Team.objects.prefetch_related('players').all()
+#     serializer_class = TeamSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def get_queryset(self):
+#         # users can list all teams, or to get own team
+#         return Team.objects.prefetch_related('players').all()
+#
+#     @action(detail=False, methods=['get'])
+#     def me(self, request):
+#         team = request.user.team
+#         serializer = self.get_serializer(team)
+#         return Response(serializer.data)
+
+
+class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.prefetch_related('players').all()
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        if self.action == "create":
+            return TeamCreateSerializer
+        return TeamSerializer
+
     def get_queryset(self):
-        # users can list all teams, or to get own team
-        return Team.objects.prefetch_related('players').all()
+        return Team.objects.filter(owner=self.request.user)
 
     @action(detail=False, methods=['get'])
     def me(self, request):
@@ -41,10 +81,25 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
+
+class PlayerFilter(df_filters.FilterSet):
+    # case-insensitive exact match on Player.position
+    position = df_filters.CharFilter(field_name="position", lookup_expr="iexact")
+
+    class Meta:
+        model = Player
+        fields = ["position"]
+
+class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.select_related('owner').all()
     serializer_class = PlayerSerializer
+    # filterset_fields = ['position']  # you can add more fields if needed
+    # search_fields = ['name']  # example
+    # ordering_fields = ['id', 'position']
     permission_classes = [IsAuthenticated]
+
+    filter_backends = [DjangoFilterBackend, drf_filters.SearchFilter, drf_filters.OrderingFilter]
+    filterset_class = PlayerFilter
 
     @action(detail=False, methods=['get'])
     def market(self, request):
@@ -83,15 +138,20 @@ class TransferListingViewSet(viewsets.ModelViewSet):
         """
         Purchase a player listed for sale.
         """
+        print("IINN BBUUYY", pk,self.get_object())
         listing = self.get_object()
+        print("IINN BBUUYY1")
         buyer_team = request.user.team
+        print("IINN BBUUYY2")
         seller_team = listing.seller
+        print("IINN BBUUYY3")
 
         if not listing.active:
+            print("IN INACTIVE")
             return Response({'detail':'Listing not active.'}, status=status.HTTP_400_BAD_REQUEST)
         if buyer_team == seller_team:
             return Response({'detail':'Cannot buy your own player.'}, status=status.HTTP_400_BAD_REQUEST)
-
+        print("AFTER===")
         price = listing.price
         if buyer_team.capital < price:
             return Response({'detail':'Insufficient capital.'}, status=status.HTTP_400_BAD_REQUEST)

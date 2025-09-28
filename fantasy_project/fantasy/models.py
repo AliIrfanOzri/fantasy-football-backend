@@ -27,6 +27,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     capital = models.DecimalField(max_digits=20, decimal_places=2, default=Decimal('5000000.00'))  # $5,000,000
     created_at = models.DateTimeField(auto_now_add=True)
+    # owner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team', null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.user.username})"
@@ -39,7 +40,7 @@ class Team(models.Model):
 class Player(models.Model):
     name = models.CharField(max_length=120)
     position = models.CharField(max_length=4, choices=POSITION_CHOICES)
-    owner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='players')
+    owner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='players',null=True,blank=True)
     value = models.DecimalField(max_digits=20, decimal_places=2, default=default_player_value)
     created_at = models.DateTimeField(auto_now_add=True)
 
