@@ -39,7 +39,8 @@ services:
   web:
     build: .
     container_name: fantasy_web
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn -c gunicorn.conf.py fantasy_project.wsgi:application
+#    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:

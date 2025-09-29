@@ -83,11 +83,11 @@ class TeamCreateSerializer(serializers.ModelSerializer):
         if players.count() != len(player_ids):
             raise serializers.ValidationError("Some players are not available or already owned.")
 
-        # ✅ 20 player validation
+
         if len(player_ids) > 20:
             raise serializers.ValidationError("A team must have exactly 20 players.")
 
-        # ✅ Position validation
+
         required_positions = {
             "GK": 2,
             "DEF": 6,
@@ -107,7 +107,6 @@ class TeamCreateSerializer(serializers.ModelSerializer):
                     f"but you selected {position_counts[pos]}."
                 )
 
-        # ✅ Budget validation
         total_cost = sum(p.value for p in players)
         if total_cost > 5000000:  # initial budget
             raise serializers.ValidationError("Selected players exceed initial budget of $5,000,000.")

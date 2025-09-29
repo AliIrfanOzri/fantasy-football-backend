@@ -19,4 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /code/
 
 # Start Gunicorn server (point to your Django project)
-CMD ["gunicorn", "fantasy_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "fantasy_project.wsgi:application"]

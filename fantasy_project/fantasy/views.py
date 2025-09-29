@@ -72,7 +72,7 @@ class TeamViewSet(viewsets.ModelViewSet):
         return TeamSerializer
 
     def get_queryset(self):
-        return Team.objects.filter(owner=self.request.user)
+        return Team.objects.filter(user=self.request.user)
 
     @action(detail=False, methods=['get'])
     def me(self, request):
